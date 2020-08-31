@@ -601,12 +601,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   output: {fileID: 2074300880}
   shoulderToTorsoAngleDegrees: 0
-  torsoToLegsAngleDegrees: 0
-  torsoMass: 55
-  torsoLength: 0.6
+  torsoToLegsAngleDegrees: 180
+  torsoMassKg: 55
+  torsoLengthMeters: 0.6
   torsoCenterOfGravity: 0.4
-  legsMass: 35
-  legsLength: 0.9
+  legsMassKg: 35
+  legsLengthMeters: 0.9
   legsCenterOfGravity: 0.4
 --- !u!4 &599692073
 Transform:
