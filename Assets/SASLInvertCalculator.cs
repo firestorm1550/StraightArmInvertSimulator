@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class SASLInvertCalculator : MonoBehaviour
 {
     public Text output;
+    public LabelledSlider shoulderAngle;
+    public LabelledSlider hipAngle;
     
     public float shoulderToTorsoAngleDegrees;
     public float torsoToLegsAngleDegrees;
@@ -22,13 +24,20 @@ public class SASLInvertCalculator : MonoBehaviour
     public float legsCenterOfGravity = .4f;
 
 
+    private void Awake()
+    {
+        shoulderAngle.Init(0,180,180);
+        hipAngle.Init(20, 180, 180);
+    }
+
     private void Update()
     {
         output.text = GetTorqueOnShoulder().RoundToNearest(.01f) + " KN*M";
+        shoulderToTorsoAngleDegrees = shoulderAngle.slider.value;
+        torsoToLegsAngleDegrees = hipAngle.slider.value;
     }
 
-
-    public float GetTorqueOnShoulder()
+    private float GetTorqueOnShoulder()
     {
         return GetTorqueOnShoulderFromLegs() + GetTorqueOnShoulderFromTorso();
     }
@@ -53,4 +62,6 @@ public class SASLInvertCalculator : MonoBehaviour
             
         return legsLengthMeters * xDistanceShouldersToLegCoG;
     }
+    
+    
 }
