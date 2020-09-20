@@ -11,6 +11,7 @@ public class SASL3DVisualizer : MonoBehaviour
 
     public Camera camera;
     public float camDistance = 4;
+    public float verticalOffset = 1;
 
     public Transform rightShoulderJoint;
     public Transform leftShoulderJoint;
@@ -36,11 +37,16 @@ public class SASL3DVisualizer : MonoBehaviour
     void Update()
     {
         ApplySASLData();
+        
+        camera.transform.Reset();
+        
         camera.transform.position = leftHand.position;
         camera.transform.position += camDistance * Vector3.back;
 
         camera.transform.LookAt(leftHand.position);
         camera.transform.Rotate(0,0, data.shoulderToTorsoAngleDegrees - 180);
+
+        camera.transform.position -= camera.transform.up * verticalOffset;
     }
 
     private void ApplySASLData()

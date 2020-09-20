@@ -21,8 +21,7 @@ public class LabelledSlider : MonoBehaviour
 
     public void Init(float min, float max, float current)
     {
-        slider.minValue = min;
-        slider.maxValue = max;
+        SetRange(min,max);
         slider.value = current;
     }
     
