@@ -2444,7 +2444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 599692072}
-  skeletonRoot: {fileID: 1592739226}
+  skeletonRoot: {fileID: 655037065}
   rightShoulderJoint: {fileID: 655037044}
   leftShoulderJoint: {fileID: 655037024}
   rightHipJoint: {fileID: 655036992}
@@ -2469,6 +2469,11 @@ Transform:
 --- !u!4 &655037046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400270, guid: b235179bd2a63d1468dd430670338c55, type: 3}
+  m_PrefabInstance: {fileID: 655036844}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &655037065 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
   m_PrefabInstance: {fileID: 655036844}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
@@ -2712,11 +2717,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &1592739226 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400326, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  m_PrefabInstance: {fileID: 655036844}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2074300879
 GameObject:
   m_ObjectHideFlags: 0
