@@ -9,8 +9,9 @@ public class SASL3DVisualizer : MonoBehaviour
 {
     public SASLInvertCalculator data;
 
-    public Transform skeletonRoot;
-    
+    public Camera camera;
+    public float camDistance = 4;
+
     public Transform rightShoulderJoint;
     public Transform leftShoulderJoint;
 
@@ -19,7 +20,9 @@ public class SASL3DVisualizer : MonoBehaviour
 
     public Transform rightHand;
     public Transform leftHand;
-    
+
+
+    private Vector3 rightHandStartPosition;
     
     private Dictionary<Transform, Quaternion> startRotations;
     private void Start()
@@ -29,13 +32,22 @@ public class SASL3DVisualizer : MonoBehaviour
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
         startRotations.Add(rightHipJoint, rightHipJoint.localRotation);
         startRotations.Add(leftHipJoint, leftHipJoint.localRotation);
-        startRotations.Add(skeletonRoot, skeletonRoot.localRotation);
+
+        rightHandStartPosition = rightHand.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         ApplySASLData();
+        camera.transform.position = leftHand.position;
+        camera.transform.position += camDistance * Vector3.back;
+
+        camera.transform.LookAt(leftHand.position);
+        camera.transform.Rotate(0,0, data.shoulderToTorsoAngleDegrees - 180);
+        
+        //camera.transform.position += camVerticalOffset * Vector3.down;
+        
     }
 
     private void ApplySASLData()
@@ -45,12 +57,12 @@ public class SASL3DVisualizer : MonoBehaviour
 
         Vector3 hipAxis = rightHipJoint.position - leftHipJoint.position;
         hipAxis.Normalize();
-
+        
         foreach (Transform joint in startRotations.Keys)
         {
             joint.localRotation = startRotations[joint];
         }
-        
+
         float theta = 180 - data.shoulderToTorsoAngleDegrees;
         rightShoulderJoint.RotateAround(rightShoulderJoint.position, shoulderAxis, theta);
         leftShoulderJoint.RotateAround(rightShoulderJoint.position, shoulderAxis, theta);
@@ -59,6 +71,11 @@ public class SASL3DVisualizer : MonoBehaviour
         float alpha = 180 - data.torsoToLegsAngleDegrees;
         rightHipJoint.Rotate(hipAxis, alpha);
         leftHipJoint.Rotate(hipAxis, alpha);
+
+
+        //Vector3 handAxis = rightHand.position - leftHand.position;
+
+        //ethanRoot.RotateAround((rightHand.position + leftHand.position) / 2, Vector3.forward, -theta);
 
     }
 }

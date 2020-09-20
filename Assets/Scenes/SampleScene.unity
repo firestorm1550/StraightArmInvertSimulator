@@ -156,10 +156,10 @@ RectTransform:
   m_Father: {fileID: 359730826}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000024796, y: 444.22}
-  m_SizeDelta: {x: 785.3159, y: 191.55676}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -95.77838}
+  m_SizeDelta: {x: 0, y: 191.55676}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &105176183
 MonoBehaviour:
@@ -2444,7 +2444,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 599692072}
-  skeletonRoot: {fileID: 655037065}
+  camera: {fileID: 963194227}
+  camDistance: 3
   rightShoulderJoint: {fileID: 655037044}
   leftShoulderJoint: {fileID: 655037024}
   rightHipJoint: {fileID: 655036992}
@@ -2469,11 +2470,6 @@ Transform:
 --- !u!4 &655037046 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400270, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  m_PrefabInstance: {fileID: 655036844}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &655037065 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400168, guid: b235179bd2a63d1468dd430670338c55, type: 3}
   m_PrefabInstance: {fileID: 655036844}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
@@ -2603,7 +2599,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
