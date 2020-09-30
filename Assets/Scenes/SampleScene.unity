@@ -3385,10 +3385,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 599692072}
   CoGMarkerPrefab: {fileID: 7535436722903011030, guid: 339ce979a261a4d72934a4fa9f47383d, type: 3}
-  skeleton: {fileID: 903975177}
-  camera: {fileID: 963194227}
-  camDistance: 3.5
-  verticalOffset: -0.6
   rightShoulderJoint: {fileID: 655037044}
   leftShoulderJoint: {fileID: 655037024}
   rightHipJoint: {fileID: 655036992}
@@ -3900,11 +3896,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 125a2996a95484452a6e4e668e6351f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &903975177 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400326, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  m_PrefabInstance: {fileID: 655036844}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &942414675
 GameObject:
   m_ObjectHideFlags: 0
