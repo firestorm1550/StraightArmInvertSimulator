@@ -2,17 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using DAS_Unity_Framework.ExtensionMethods;
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.Animations;
 
 public class SASL3DVisualizer : MonoBehaviour
 {
     public SASLInvertCalculator data;
-
-    public Transform skeleton;
-    public Camera camera;
-    public float camDistance = 4;
-    public float verticalOffset = 1;
+    public CoGMarker CoGMarkerPrefab;
 
     public Transform rightShoulderJoint;
     public Transform leftShoulderJoint;
@@ -24,19 +21,27 @@ public class SASL3DVisualizer : MonoBehaviour
     public Transform leftHand;
     
     
+    
     private Vector3 HandAxis => (rightHand.position - leftHand.position).normalized;
     private Vector3 ShoulderAxis => (rightShoulderJoint.position - leftShoulderJoint.position).normalized;
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
-    
 
-    private Vector3 leftHandStartPos;
-    private Vector3 leftHandStartUp;
+
+    private CoGMarker headAndArmsCoGMarker;
+    private CoGMarker torsoCoGMarker;
+    private CoGMarker legsCoGMarker;
+    private CoGMarker legsAndTorsoCoGMarker;
+    private CoGMarker bodyCoGMarker;
+
+    private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
+    
+    
     private void Start()
     {
-        leftHandStartPos = leftHand.transform.position;
-        leftHandStartUp = leftHand.transform.up;
-        
+        //PrepCoGMarkers();
+        _leftHandStartPos = leftHand.transform.position;
+
         startRotations = new Dictionary<Transform, Quaternion>();
         startRotations.Add(rightShoulderJoint, rightShoulderJoint.localRotation);
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
@@ -48,35 +53,12 @@ public class SASL3DVisualizer : MonoBehaviour
     void Update()
     {
         ApplySASLData();
-
-        transform.rotation = Quaternion.identity;
-        transform.RotateAround(transform.position, rightHand.position - leftHand.position, data.shoulderToTorsoAngleDegrees - 180);
-        transform.position = leftHandStartPos + (transform.position - leftHand.position);
         
-
-
-        //This works but is jittery
-
-        // transform.Reset();
-        // skeleton.transform.parent = null;
-        //
-        //
-        // transform.position = leftHand.position;
-        // skeleton.transform.parent = transform;
-        //
-        // transform.RotateAround(transform.position, rightHand.position - leftHand.position, data.shoulderToTorsoAngleDegrees - 180);
-
-
-
-        // camera.transform.Reset();
-        //
-        // camera.transform.position = leftHand.position;
-        // camera.transform.position += camDistance * Vector3.back;
-        //
-        // camera.transform.LookAt(leftHand.position);
-        // camera.transform.Rotate(0,0, data.shoulderToTorsoAngleDegrees - 180);
-        //
-        // camera.transform.position -= camera.transform.up * verticalOffset;
+        transform.rotation = Quaternion.identity;
+        transform.RotateAround(transform.position, HandAxis, data.shoulderToTorsoAngleDegrees - 180);
+        transform.position = _leftHandStartPos + (transform.position - leftHand.position);
+        
+        PlaceCoGMarkers();
     }
 
     private void ApplySASLData()
@@ -93,5 +75,29 @@ public class SASL3DVisualizer : MonoBehaviour
         float alpha = 180 - data.torsoToLegsAngleDegrees;
         rightHipJoint.RotateAround(rightHipJoint.position, HipAxis, alpha);
         leftHipJoint.RotateAround(rightHipJoint.position, HipAxis, alpha);
+        
+    }
+
+    private void PlaceCoGMarkers()
+    {
+        
+    }
+
+    private void PrepCoGMarkers()
+    {
+        headAndArmsCoGMarker = Instantiate(CoGMarkerPrefab);
+        headAndArmsCoGMarker.gameObject.name = "Head and Arms CoG";
+        
+        torsoCoGMarker = Instantiate(CoGMarkerPrefab);
+        torsoCoGMarker.gameObject.name = "Torso CoG";
+        
+        legsCoGMarker = Instantiate(CoGMarkerPrefab);
+        legsCoGMarker.gameObject.name = "Legs CoG";
+        
+        legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
+        legsAndTorsoCoGMarker.gameObject.name = "Legs and Torso";
+        
+        bodyCoGMarker = Instantiate(CoGMarkerPrefab);
+        bodyCoGMarker.gameObject.name = "Whole Body CoG";
     }
 }

@@ -16,11 +16,16 @@ public class SASLInvertCalculator : MonoBehaviour
     [HideInInspector] public float shoulderToTorsoAngleDegrees;
     [HideInInspector] public float torsoToLegsAngleDegrees;
 
-    public float torsoMassKg = 55f;
+
+    public float headAndArmsMassKg = 18;
+    public float headAndArmsLengthMeters = .6f;
+    public float headAndArmsCenterOfGravity = .3f;
+
+    public float torsoMassKg = 42;
     public float torsoLengthMeters = .6f;
     public float torsoCenterOfGravity = .4f;
-    
-    public float legsMassKg = 35f;
+ 
+    public float legsMassKg = 40;
     public float legsLengthMeters = .9f;
     public float legsCenterOfGravity = .4f;
 
@@ -103,6 +108,10 @@ public class SASLInvertCalculator : MonoBehaviour
         float hipsToToesX = GetDistanceHipsToToesInX();
         return legsMassKg * legsCenterOfGravity * hipsToToesX;
     }
-    
-    
+
+    private float GetArmsAngleFromVertical()
+    {
+        return 0;
+    }
+
 }
