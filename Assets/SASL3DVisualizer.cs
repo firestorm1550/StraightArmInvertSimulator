@@ -9,6 +9,7 @@ public class SASL3DVisualizer : MonoBehaviour
 {
     public SASLInvertCalculator data;
 
+    public Transform skeleton;
     public Camera camera;
     public float camDistance = 4;
     public float verticalOffset = 1;
@@ -23,9 +24,19 @@ public class SASL3DVisualizer : MonoBehaviour
     public Transform leftHand;
     
     
+    private Vector3 HandAxis => (rightHand.position - leftHand.position).normalized;
+    private Vector3 ShoulderAxis => (rightShoulderJoint.position - leftShoulderJoint.position).normalized;
+    private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
+    
+
+    private Vector3 leftHandStartPos;
+    private Vector3 leftHandStartUp;
     private Dictionary<Transform, Quaternion> startRotations;
     private void Start()
     {
+        leftHandStartPos = leftHand.transform.position;
+        leftHandStartUp = leftHand.transform.up;
+        
         startRotations = new Dictionary<Transform, Quaternion>();
         startRotations.Add(rightShoulderJoint, rightShoulderJoint.localRotation);
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
@@ -37,37 +48,50 @@ public class SASL3DVisualizer : MonoBehaviour
     void Update()
     {
         ApplySASLData();
-        
-        camera.transform.Reset();
-        
-        camera.transform.position = leftHand.position;
-        camera.transform.position += camDistance * Vector3.back;
 
-        camera.transform.LookAt(leftHand.position);
-        camera.transform.Rotate(0,0, data.shoulderToTorsoAngleDegrees - 180);
+        transform.rotation = Quaternion.identity;
+        transform.RotateAround(transform.position, rightHand.position - leftHand.position, data.shoulderToTorsoAngleDegrees - 180);
+        transform.position = leftHandStartPos + (transform.position - leftHand.position);
+        
 
-        camera.transform.position -= camera.transform.up * verticalOffset;
+
+        //This works but is jittery
+
+        // transform.Reset();
+        // skeleton.transform.parent = null;
+        //
+        //
+        // transform.position = leftHand.position;
+        // skeleton.transform.parent = transform;
+        //
+        // transform.RotateAround(transform.position, rightHand.position - leftHand.position, data.shoulderToTorsoAngleDegrees - 180);
+
+
+
+        // camera.transform.Reset();
+        //
+        // camera.transform.position = leftHand.position;
+        // camera.transform.position += camDistance * Vector3.back;
+        //
+        // camera.transform.LookAt(leftHand.position);
+        // camera.transform.Rotate(0,0, data.shoulderToTorsoAngleDegrees - 180);
+        //
+        // camera.transform.position -= camera.transform.up * verticalOffset;
     }
 
     private void ApplySASLData()
     {
-        Vector3 shoulderAxis = rightShoulderJoint.position - leftShoulderJoint.position;
-        shoulderAxis.Normalize();
-
-        Vector3 hipAxis = rightHipJoint.position - leftHipJoint.position;
-        hipAxis.Normalize();
-        
         foreach (Transform joint in startRotations.Keys)
         {
             joint.localRotation = startRotations[joint];
         }
 
         float theta = 180 - data.shoulderToTorsoAngleDegrees;
-        rightShoulderJoint.RotateAround(rightShoulderJoint.position, shoulderAxis, theta);
-        leftShoulderJoint.RotateAround(rightShoulderJoint.position, shoulderAxis, theta);
+        rightShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, theta);
+        leftShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, theta);
         
         float alpha = 180 - data.torsoToLegsAngleDegrees;
-        rightHipJoint.Rotate(hipAxis, alpha);
-        leftHipJoint.Rotate(hipAxis, alpha);
+        rightHipJoint.RotateAround(rightHipJoint.position, HipAxis, alpha);
+        leftHipJoint.RotateAround(rightHipJoint.position, HipAxis, alpha);
     }
 }
