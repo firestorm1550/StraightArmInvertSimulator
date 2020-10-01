@@ -11,5 +11,10 @@ namespace DefaultNamespace
             gameObject.name = markerName;
             meshRenderer.material.color = color;
         }
+
+        public void Place(Vector3 zeroPoint, Vector3 fwd, Vector3 up, Vector2 coords2d)
+        {
+            transform.position = zeroPoint + fwd * coords2d.x + up * coords2d.y;
+        }
     }
 }

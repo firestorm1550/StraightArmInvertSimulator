@@ -39,6 +39,8 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
+    private Vector3 startForward;
+    private Vector3 startUp;
     
     
     private void Start()
@@ -51,6 +53,9 @@ public class SASL3DVisualizer : MonoBehaviour
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
         startRotations.Add(rightHipJoint, rightHipJoint.localRotation);
         startRotations.Add(leftHipJoint, leftHipJoint.localRotation);
+
+        startForward = transform.forward;
+        startUp = transform.up;
         
         PrepCoGMarkers();
     }
@@ -85,13 +90,16 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PlaceCoGMarkers()
     {
-        Vector3 zeroPoint = neckJoint.position + .1f * transform.forward;//(leftShoulderJoint.position + rightShoulderJoint.position) / 2;
-
-        torsoCoGMarker.transform.position = zeroPoint + transform.forward * data.TorsoCG.x + transform.up * data.TorsoCG.y;
-
-
-        legsCoGMarker.transform.position = zeroPoint + transform.forward * data.LegsCG.x + transform.up * data.LegsCG.y;
+        Vector3 zeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position)/2 + .05f * transform.forward;//(leftShoulderJoint.position + rightShoulderJoint.position) / 2;
+        Debug.Log(zeroPoint);
+        
+        torsoCoGMarker.Place(zeroPoint,startForward,startUp, data.TorsoCG);
+        legsCoGMarker.Place(zeroPoint,startForward,startUp, data.LegsCG);
+        legsAndTorsoCoGMarker.Place(zeroPoint,startForward,startUp, data.CombinedCG);
+        
+        
     }
+    
 
     private void PrepCoGMarkers()
     {
@@ -104,8 +112,8 @@ public class SASL3DVisualizer : MonoBehaviour
         legsCoGMarker = Instantiate(CoGMarkerPrefab);
         legsCoGMarker.Initialize("Legs CoG", Color.yellow);;
         
-        // legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
-        // legsAndTorsoCoGMarker.Initialize("Legs and Torso", Color.green);
+        legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
+        legsAndTorsoCoGMarker.Initialize("Legs and Torso", Color.green);
 
         // bodyCoGMarker = Instantiate(CoGMarkerPrefab);
         // bodyCoGMarker.gameObject.name = "Whole Body CoG";

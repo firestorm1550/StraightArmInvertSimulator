@@ -12,7 +12,7 @@ public class SASLInvertCalculator : MonoBehaviour
     public Text hipsTorqueText;
     public LabelledSlider shoulderAngle;
     public LabelledSlider hipAngle;
-    
+    public Text variablesText;
     
     public float headAndArmsMassKg = 18;
     public float headAndArmsLengthMeters = .6f;
@@ -62,6 +62,9 @@ public class SASLInvertCalculator : MonoBehaviour
         
         shoulderToTorsoAngleDegrees = shoulderAngle.slider.value;
         torsoToLegsAngleDegrees = hipAngle.slider.value;
+
+        variablesText.text = "x1: " + x1.RoundToNearest(.1f) + "\ny1: " + y1.RoundToNearest(.1f) + 
+                             "\nx2: " + x2.RoundToNearest(.1f) + "\ny2: " + y2.RoundToNearest(.1f);
     }
 
     private float GetTorqueOnShoulder()
