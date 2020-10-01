@@ -31,16 +31,18 @@ public class SASL3DVisualizer : MonoBehaviour
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
 
 
-    private CoGMarker headAndArmsCoGMarker;
+    private CoGMarker armsCoGMarker;
+    private CoGMarker headCoGMarker;
     private CoGMarker torsoCoGMarker;
     private CoGMarker legsCoGMarker;
-    private CoGMarker legsAndTorsoCoGMarker;
+    private CoGMarker wholeBodyCoGMarker;
     private CoGMarker bodyCoGMarker;
 
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
     private Vector3 startForward;
     private Vector3 startUp;
+    private Vector3 CoGZeroPoint;
     
     
     private void Start()
@@ -56,7 +58,7 @@ public class SASL3DVisualizer : MonoBehaviour
 
         startForward = transform.forward;
         startUp = transform.up;
-        
+        CoGZeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position) / 2;// + .05f * transform.forward;
         PrepCoGMarkers();
     }
 
@@ -90,11 +92,12 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PlaceCoGMarkers()
     {
-        Vector3 zeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position)/2 + .05f * transform.forward;//(leftShoulderJoint.position + rightShoulderJoint.position) / 2;
-
-        torsoCoGMarker.Place(zeroPoint,startForward,startUp, data.TorsoCG);
-        legsCoGMarker.Place(zeroPoint,startForward,startUp, data.LegsCG);
-        legsAndTorsoCoGMarker.Place(zeroPoint,startForward,startUp, data.CombinedCG);
+        armsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.ArmsCG);
+        headCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.HeadCG);
+        torsoCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.TorsoCG);
+        legsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.LegsCG);
+        
+        wholeBodyCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.CombinedCG);
         
         
     }
@@ -102,17 +105,20 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PrepCoGMarkers()
     {
-        // headAndArmsCoGMarker = Instantiate(CoGMarkerPrefab);
-        // headAndArmsCoGMarker.gameObject.name = "Head and Arms CoG";
+        armsCoGMarker = Instantiate(CoGMarkerPrefab);
+        armsCoGMarker.Initialize("Arms CoG", Color.red, data.ArmsMassKg);
+        
+        headCoGMarker = Instantiate(CoGMarkerPrefab);
+        headCoGMarker.Initialize("Head CoG", Color.white, data.HeadMassKg);
         
         torsoCoGMarker = Instantiate(CoGMarkerPrefab);
-        torsoCoGMarker.Initialize("Torso CoG", Color.blue);
+        torsoCoGMarker.Initialize("Torso CoG", Color.blue, data.TorsoMassKg);
         
         legsCoGMarker = Instantiate(CoGMarkerPrefab);
-        legsCoGMarker.Initialize("Legs CoG", Color.yellow);;
+        legsCoGMarker.Initialize("Legs CoG", Color.yellow, data.LegsMassKg);
         
-        legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
-        legsAndTorsoCoGMarker.Initialize("Legs and Torso", Color.green);
+        wholeBodyCoGMarker = Instantiate(CoGMarkerPrefab);
+        wholeBodyCoGMarker.Initialize("Whole Body CoG", Color.green, data.CombinedMass);
 
         // bodyCoGMarker = Instantiate(CoGMarkerPrefab);
         // bodyCoGMarker.gameObject.name = "Whole Body CoG";

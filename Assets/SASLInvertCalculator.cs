@@ -13,24 +13,46 @@ public class SASLInvertCalculator : MonoBehaviour
     public LabelledSlider shoulderAngle;
     public LabelledSlider hipAngle;
     public Text variablesText;
-    
-    public float headAndArmsMassKg = 18;
-    public float headAndArmsLengthMeters = .6f;
-    public float headAndArmsCenterOfGravity = .3f;
 
-    public float torsoMassKg = 42;
-    public float torsoLengthMeters = .6f;
-    public float torsoCenterOfGravity = .4f;
- 
-    public float legsMassKg = 40;
-    public float legsLengthMeters = .9f;
-    public float legsCenterOfGravity = .4f;
+
+    //mass percent values from http://robslink.com/SAS/democd79/body_part_weights.htm
+
+
+    private float totalMass = 80;
     
+    float headMassPercent = 8.26f;
+    float headLengthMeters = .4f;
+    float headCenterOfGravity = .55f;
     
+    float armsMassPercent = 11.4f;
+    float armsLengthMeters = .66f;
+    float armsCenterOfGravity = .4f;
+
+    float torsoMassPercent = 46.84f;
+    float torsoLengthMeters = .46f;
+    float torsoCenterOfGravity = .4f;
+
+    float legsMassPercent = 33.4f;
+    float legsLengthMeters = .9f;
+    float legsCenterOfGravity = .4f;
+
+
+
+    public float ArmsMassKg => armsMassPercent * totalMass / 100;
+    public float HeadMassKg => headMassPercent * totalMass / 100;
+    public float TorsoMassKg => torsoMassPercent * totalMass / 100;
+    public float LegsMassKg => legsMassPercent * totalMass / 100;
+    public float CombinedMass => totalMass;
+
+
+
+
+
+    [HideInInspector] public float armsElevationAngle;
     [HideInInspector] public float shoulderToTorsoAngleDegrees; //D
     [HideInInspector] public float torsoToLegsAngleDegrees; //B
     public float handsAngle = 0;
-    public float A => 180 - shoulderToTorsoAngleDegrees;
+    public float A => 180 - shoulderToTorsoAngleDegrees - armsElevationAngle;
     public float C => 180 - (90 - A) - torsoToLegsAngleDegrees;
 
 
@@ -40,15 +62,24 @@ public class SASLInvertCalculator : MonoBehaviour
     public float y2 => legsLengthMeters * Mathf.Sin(C * Mathf.Deg2Rad);
 
     
+    
+    public Vector2 HeadCG => new Vector2(headLengthMeters * Mathf.Sin(-A * Mathf.Deg2Rad) * headCenterOfGravity,
+                                        headLengthMeters * Mathf.Cos(-A * Mathf.Deg2Rad) * headCenterOfGravity);
+    public Vector2 ArmsCG => new Vector2(armsLengthMeters * Mathf.Sin(armsElevationAngle) * armsCenterOfGravity,
+                                        armsLengthMeters * Mathf.Cos(armsElevationAngle) * armsCenterOfGravity);
     public Vector2 LegsCG => new Vector2(x1 + x2 * legsCenterOfGravity, -y1 + y2 *legsCenterOfGravity);
     public Vector2 TorsoCG => new Vector2(x1 * torsoCenterOfGravity, -y1 * torsoCenterOfGravity);
-    public Vector2 CombinedCG => (LegsCG * legsMassKg + TorsoCG * torsoMassKg) / (torsoMassKg + legsMassKg);
+
+    public Vector2 CombinedCG =>
+        (LegsCG * LegsMassKg + 
+         TorsoCG * TorsoMassKg + 
+         HeadCG * HeadMassKg + 
+         ArmsCG * ArmsMassKg) / totalMass;
 
 
 
-    public float CombinedMass => legsMassKg + torsoMassKg;
-
-    public float TorqueOnHips => (LegsCG.x - x1) * legsMassKg;
+    
+    public float TorqueOnHips => (LegsCG.x - x1) * LegsMassKg;
     public float TorqueOnShoulders => CombinedCG.x * CombinedMass;
     
     
