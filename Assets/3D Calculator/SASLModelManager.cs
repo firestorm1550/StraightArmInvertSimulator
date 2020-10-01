@@ -78,7 +78,7 @@ public class SASLModelManager : MonoBehaviour
         
         //Set arms angle
         Vector3 handsToCoG = massSystem.LocalCenterOfGravity - transform.InverseTransformPoint(leftHand.transform.position) ;
-        handsToCoG = new Vector3(0,-1, -handsToCoG.z);
+        handsToCoG = new Vector3(0,-1, handsToCoG.z);
         
         float armAngle = Vector3.SignedAngle(handsToCoG, Vector3.down, HandAxis);
         Debug.Log(handsToCoG + " to " + Vector3.down + " = " + armAngle);
