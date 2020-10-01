@@ -8,6 +8,7 @@ public class MassSystem : MonoBehaviour
 {
     public CoGMarker CoGMarkerPrefab;
     public Vector3 CenterOfGravity => centerOfGravityMarker.transform.position;
+    public Vector3 LocalCenterOfGravity => centerOfGravityMarker.transform.localPosition; 
     
     private List<MassPoint> _massPoints;
     private CoGMarker centerOfGravityMarker;
@@ -24,7 +25,7 @@ public class MassSystem : MonoBehaviour
             massPoint.Initialize(totalMass);
         }
         
-        centerOfGravityMarker = Instantiate(CoGMarkerPrefab);
+        centerOfGravityMarker = Instantiate(CoGMarkerPrefab,transform);
         centerOfGravityMarker.Initialize("Center of Gravity", Color.green, totalMass);
     }
 
