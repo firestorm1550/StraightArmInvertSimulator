@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class SASLModelManager : MonoBehaviour
 {
+    public bool applyArmAngle = true;
+    
     public Text shoulderTorqueText;
     public Text hipsTorqueText;
     public LabelledSlider shoulderAngle;
@@ -32,7 +34,7 @@ public class SASLModelManager : MonoBehaviour
     
     private void Awake()
     {
-        shoulderAngle.Init(0,180,180);
+        shoulderAngle.Init(-90,180,180);
         hipAngle.Init(20, 180, 180);
     }
 
@@ -49,6 +51,7 @@ public class SASLModelManager : MonoBehaviour
     
     void Update()
     {
+        transform.rotation = Quaternion.identity;
      
         foreach (Transform joint in startRotations.Keys)
         {
@@ -74,21 +77,30 @@ public class SASLModelManager : MonoBehaviour
         //                               Quaternion.AngleAxis(180-hipAngle.slider.value, hipAxis);
         // leftHipJoint.localRotation = startRotations[leftHipJoint] *
         //     Quaternion.AngleAxis(180-hipAngle.slider.value, hipAxis);
+
+
+        //lock hands position
+        transform.RotateAround(transform.position, HandAxis, shoulderAngle.slider.value - 180);
+        transform.position = _leftHandStartPos + (transform.position - leftHand.position);
         
         
-        //Set arms angle
-        Vector3 handsToCoG = massSystem.LocalCenterOfGravity - transform.InverseTransformPoint(leftHand.transform.position) ;
-        handsToCoG = new Vector3(0,-1, handsToCoG.z);
         
+        Vector3 handsToCoG = massSystem.CenterOfGravity - leftHand.transform.position;
+        handsToCoG = new Vector3(0, -1, handsToCoG.z);
+
         float armAngle = Vector3.SignedAngle(handsToCoG, Vector3.down, HandAxis);
         Debug.Log(handsToCoG + " to " + Vector3.down + " = " + armAngle);
         
         
+        if (applyArmAngle)
+        {
+            transform.RotateAround(leftHand.position, HandAxis, 2*armAngle);
+            transform.position = _leftHandStartPos + (transform.position - leftHand.position);
+            
+        }
+
+
         
-        //lock hands position
-        transform.rotation = Quaternion.identity;
-        transform.RotateAround(transform.position, HandAxis, shoulderAngle.slider.value - 180 - armAngle);
-        transform.position = _leftHandStartPos + (transform.position - leftHand.position);
         
         
     }

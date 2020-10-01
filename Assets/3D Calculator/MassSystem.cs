@@ -26,7 +26,7 @@ public class MassSystem : MonoBehaviour
         }
         
         centerOfGravityMarker = Instantiate(CoGMarkerPrefab,transform);
-        centerOfGravityMarker.Initialize("Center of Gravity", Color.green, totalMass);
+        centerOfGravityMarker.Initialize("Center of Gravity", Color.blue, totalMass);
     }
 
     // Update is called once per frame
