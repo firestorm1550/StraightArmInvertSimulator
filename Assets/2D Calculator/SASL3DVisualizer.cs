@@ -29,6 +29,7 @@ public class SASL3DVisualizer : MonoBehaviour
     
     
     
+    
     private Vector3 HandAxis => (rightHand.position - leftHand.position).normalized;
     private Vector3 ShoulderAxis => (rightShoulderJoint.position - leftShoulderJoint.position).normalized;
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
@@ -48,8 +49,6 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
-    private Vector3 startForward;
-    private Vector3 startUp;
 
 
     private void Start()
@@ -62,9 +61,7 @@ public class SASL3DVisualizer : MonoBehaviour
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
         startRotations.Add(rightHipJoint, rightHipJoint.localRotation);
         startRotations.Add(leftHipJoint, leftHipJoint.localRotation);
-
-        startForward = transform.forward;
-        startUp = transform.up;
+        
         PrepCoGMarkers();
     }
 
@@ -105,12 +102,14 @@ public class SASL3DVisualizer : MonoBehaviour
         // hipsMarker.Place(CoGZeroPoint,startForward,startUp, new Vector2(data.x1,-data.y1));
         // toesMarker.Place(CoGZeroPoint,startForward,startUp, new Vector2(data.x1 + data.x2,data.y2 - data.y1));
 
-        armsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.ArmsCG);
-        headCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.HeadCG);
-        torsoCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.TorsoCG);
-        legsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.LegsCG);
+        // armsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.ArmsCG);
+        // headCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.HeadCG);
+        // torsoCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.TorsoCG);
+        // legsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.LegsCG);
+        //
         
-        wholeBodyCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.CombinedCG);
+        
+        // wholeBodyCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.CombinedCG);
         
         
     }
