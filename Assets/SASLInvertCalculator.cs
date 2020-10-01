@@ -13,10 +13,7 @@ public class SASLInvertCalculator : MonoBehaviour
     public LabelledSlider shoulderAngle;
     public LabelledSlider hipAngle;
     
-    [HideInInspector] public float shoulderToTorsoAngleDegrees;
-    [HideInInspector] public float torsoToLegsAngleDegrees;
-
-
+    
     public float headAndArmsMassKg = 18;
     public float headAndArmsLengthMeters = .6f;
     public float headAndArmsCenterOfGravity = .3f;
@@ -28,6 +25,28 @@ public class SASLInvertCalculator : MonoBehaviour
     public float legsMassKg = 40;
     public float legsLengthMeters = .9f;
     public float legsCenterOfGravity = .4f;
+    
+    
+    [HideInInspector] public float shoulderToTorsoAngleDegrees; //D
+    [HideInInspector] public float torsoToLegsAngleDegrees; //B
+    public float handsAngle = 0;
+    public float A => 180 - shoulderToTorsoAngleDegrees;
+    public float C => 180 - (90 - A) - torsoToLegsAngleDegrees;
+
+
+    public float x1 => torsoLengthMeters * Mathf.Sin(A * Mathf.Deg2Rad);
+    public float y1 => torsoLengthMeters * Mathf.Cos(A * Mathf.Deg2Rad);
+    public float x2 => legsLengthMeters * Mathf.Cos(C * Mathf.Deg2Rad);
+    public float y2 => legsLengthMeters * Mathf.Sin(C * Mathf.Deg2Rad);
+
+    
+    public Vector2 LegsCG => new Vector2(x1 + x2 * legsCenterOfGravity, -y1 + y2 *legsCenterOfGravity);
+    public Vector2 TorsoCG => new Vector2(x1 * torsoCenterOfGravity, -y1 * torsoCenterOfGravity);
+    public Vector2 CombinedCG => (LegsCG * legsMassKg + TorsoCG * torsoMassKg) / (torsoMassKg + legsMassKg);
+
+
+    
+    
 
 
     private void Awake()
@@ -55,6 +74,10 @@ public class SASLInvertCalculator : MonoBehaviour
         float hipsToToesX = GetDistanceHipsToToesInX();
         return legsMassKg * legsCenterOfGravity * hipsToToesX;
     }
+    
+    
+    
+    
     
     
     

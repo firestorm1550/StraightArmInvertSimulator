@@ -11,6 +11,10 @@ public class SASL3DVisualizer : MonoBehaviour
     public SASLInvertCalculator data;
     public CoGMarker CoGMarkerPrefab;
 
+
+    public Transform headJoint;
+    public Transform neckJoint;
+    
     public Transform rightShoulderJoint;
     public Transform leftShoulderJoint;
 
@@ -47,6 +51,8 @@ public class SASL3DVisualizer : MonoBehaviour
         startRotations.Add(leftShoulderJoint, leftShoulderJoint.localRotation);
         startRotations.Add(rightHipJoint, rightHipJoint.localRotation);
         startRotations.Add(leftHipJoint, leftHipJoint.localRotation);
+        
+        PrepCoGMarkers();
     }
 
     // Update is called once per frame
@@ -67,10 +73,9 @@ public class SASL3DVisualizer : MonoBehaviour
         {
             joint.localRotation = startRotations[joint];
         }
-
-        float theta = 180 - data.shoulderToTorsoAngleDegrees;
-        rightShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, theta);
-        leftShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, theta);
+        
+        rightShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, data.A);
+        leftShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, data.A);
         
         float alpha = 180 - data.torsoToLegsAngleDegrees;
         rightHipJoint.RotateAround(rightHipJoint.position, HipAxis, alpha);
@@ -80,24 +85,29 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PlaceCoGMarkers()
     {
-        
+        Vector3 zeroPoint = neckJoint.position + .1f * transform.forward;//(leftShoulderJoint.position + rightShoulderJoint.position) / 2;
+
+        torsoCoGMarker.transform.position = zeroPoint + transform.forward * data.TorsoCG.x + transform.up * data.TorsoCG.y;
+
+
+        legsCoGMarker.transform.position = zeroPoint + transform.forward * data.LegsCG.x + transform.up * data.LegsCG.y;
     }
 
     private void PrepCoGMarkers()
     {
-        headAndArmsCoGMarker = Instantiate(CoGMarkerPrefab);
-        headAndArmsCoGMarker.gameObject.name = "Head and Arms CoG";
+        // headAndArmsCoGMarker = Instantiate(CoGMarkerPrefab);
+        // headAndArmsCoGMarker.gameObject.name = "Head and Arms CoG";
         
         torsoCoGMarker = Instantiate(CoGMarkerPrefab);
-        torsoCoGMarker.gameObject.name = "Torso CoG";
+        torsoCoGMarker.Initialize("Torso CoG", Color.blue);
         
         legsCoGMarker = Instantiate(CoGMarkerPrefab);
-        legsCoGMarker.gameObject.name = "Legs CoG";
+        legsCoGMarker.Initialize("Legs CoG", Color.yellow);;
         
-        legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
-        legsAndTorsoCoGMarker.gameObject.name = "Legs and Torso";
-        
-        bodyCoGMarker = Instantiate(CoGMarkerPrefab);
-        bodyCoGMarker.gameObject.name = "Whole Body CoG";
+        // legsAndTorsoCoGMarker = Instantiate(CoGMarkerPrefab);
+        // legsAndTorsoCoGMarker.Initialize("Legs and Torso", Color.green);
+
+        // bodyCoGMarker = Instantiate(CoGMarkerPrefab);
+        // bodyCoGMarker.gameObject.name = "Whole Body CoG";
     }
 }
