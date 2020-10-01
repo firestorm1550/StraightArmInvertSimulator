@@ -1375,15 +1375,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 639f2309b64de433dae5fcf63fb0583f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  angleFudgeFactor: 1
   shoulderTorqueText: {fileID: 2074300880}
   hipsTorqueText: {fileID: 1690306224}
   shoulderAngle: {fileID: 1275236617}
   hipAngle: {fileID: 815320802}
   variablesText: {fileID: 700693241}
-  armsElevationAngle: 0
+  headMassPercent: 8.26
+  headLengthMeters: 0.4
+  headCenterOfGravity: 0.55
+  armsMassPercent: 11.4
+  armsLengthMeters: 0.66
+  armsCenterOfGravity: 0.4
+  torsoMassPercent: 46.84
+  torsoLengthMeters: 0.46
+  torsoCenterOfGravity: 0.4
+  legsMassPercent: 33.4
+  legsLengthMeters: 0.95
+  legsCenterOfGravity: 0.4
   shoulderToTorsoAngleDegrees: 180
   torsoToLegsAngleDegrees: 180
-  handsAngle: 0
 --- !u!4 &599692073
 Transform:
   m_ObjectHideFlags: 0
@@ -1906,6 +1917,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c3aabecfd814de1ad7a6f0952370c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testRotation: 0
+  testPosition: {x: 0, y: 0}
   data: {fileID: 599692072}
   CoGMarkerPrefab: {fileID: 7535436722903011030, guid: 339ce979a261a4d72934a4fa9f47383d, type: 3}
   headJoint: {fileID: 655037039}

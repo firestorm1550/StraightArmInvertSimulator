@@ -5,6 +5,53 @@ using UnityEngine;
 
 public static class VectorExtensionMethods 
 {
+    //=============== Vector2 Extensions ==========================================
+    public static Vector2 Rotate(this Vector2 v, float degrees)
+    {
+        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
+        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
+
+        float tx = v.x;
+        float ty = v.y;
+        v.x = (cos * tx) - (sin * ty);
+        v.y = (sin * tx) + (cos * ty);
+        
+        return v;
+    }
+
+    public static Vector2 RotateAround(this Vector2 v, Vector2 rotationReference, float degrees)
+    {
+        return v.RotatePoint(degrees, rotationReference);
+        
+        float sin = Mathf.Sin(degrees * Mathf.Deg2Rad);
+        float cos = Mathf.Cos(degrees * Mathf.Deg2Rad);
+
+        float tx = v.x - rotationReference.x;
+        float ty = v.y - rotationReference.y;
+        v.x = (cos * tx) - (sin * ty);
+        v.y = (sin * tx) + (cos * ty);
+        return v + rotationReference;
+    }
+    
+    public static Vector2 RotatePoint(this Vector2 p, float angle, Vector2 rotateAround)
+    {
+        float s = Mathf.Sin(angle * Mathf.Deg2Rad);
+        float c = Mathf.Cos(angle * Mathf.Deg2Rad);
+
+        // translate point back to origin:
+        p.x -= rotateAround.x;
+        p.y -= rotateAround.y;
+
+        // rotate point
+        float xnew = p.x * c - p.y * s;
+        float ynew = p.x * s + p.y * c;
+
+        // translate point back:
+        p.x = xnew + rotateAround.x;
+        p.y = ynew + rotateAround.y;
+        return p;
+    }
+
     //=============== Vector3 Extensions ==========================================
 
     //Multiplies x by x, y by y, and z by z, returning the resultant value

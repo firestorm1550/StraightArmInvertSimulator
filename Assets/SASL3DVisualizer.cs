@@ -8,6 +8,9 @@ using UnityEngine.Animations;
 
 public class SASL3DVisualizer : MonoBehaviour
 {
+    public float testRotation;
+    public Vector2 testPosition;
+    
     public SASLInvertCalculator data;
     public CoGMarker CoGMarkerPrefab;
 
@@ -31,6 +34,7 @@ public class SASL3DVisualizer : MonoBehaviour
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
 
 
+    private CoGMarker testMarker;
     private CoGMarker armsCoGMarker;
     private CoGMarker headCoGMarker;
     private CoGMarker torsoCoGMarker;
@@ -42,9 +46,8 @@ public class SASL3DVisualizer : MonoBehaviour
     private Dictionary<Transform, Quaternion> startRotations;
     private Vector3 startForward;
     private Vector3 startUp;
-    private Vector3 CoGZeroPoint;
-    
-    
+
+
     private void Start()
     {
         //PrepCoGMarkers();
@@ -58,7 +61,6 @@ public class SASL3DVisualizer : MonoBehaviour
 
         startForward = transform.forward;
         startUp = transform.up;
-        CoGZeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position) / 2;// + .05f * transform.forward;
         PrepCoGMarkers();
     }
 
@@ -68,7 +70,7 @@ public class SASL3DVisualizer : MonoBehaviour
         ApplySASLData();
         
         transform.rotation = Quaternion.identity;
-        transform.RotateAround(transform.position, HandAxis, data.shoulderToTorsoAngleDegrees - 180);
+        transform.RotateAround(transform.position, HandAxis, data.shoulderToTorsoAngleDegrees - 180 - data.armsElevationAngle);
         transform.position = _leftHandStartPos + (transform.position - leftHand.position);
         
         PlaceCoGMarkers();
@@ -92,6 +94,10 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PlaceCoGMarkers()
     {
+        Vector2 CoGZeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position) / 2;// + .05f * transform.forward;
+        
+        testMarker.Place(CoGZeroPoint,startForward,startUp, data.HandsPosition);
+        
         armsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.ArmsCG);
         headCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.HeadCG);
         torsoCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.TorsoCG);
@@ -105,6 +111,9 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PrepCoGMarkers()
     {
+        testMarker = Instantiate(CoGMarkerPrefab);
+        testMarker.Initialize("Test Marker", Color.black, data.ArmsMassKg);
+        
         armsCoGMarker = Instantiate(CoGMarkerPrefab);
         armsCoGMarker.Initialize("Arms CoG", Color.red, data.ArmsMassKg);
         
