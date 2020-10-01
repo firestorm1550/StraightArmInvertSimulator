@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DAS_Unity_Framework.ExtensionMethods;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,6 +28,13 @@ public class SASLModelManager : MonoBehaviour
     private Vector3 HandAxis => (rightHand.position - leftHand.position).normalized;
     private Vector3 ShoulderAxis => (rightShoulderJoint.position - leftShoulderJoint.position).normalized;
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
+    
+    
+    private float TorqueOnShoulders => (massSystem.CenterOfGravity.z - leftShoulderJoint.position.z) * massSystem.TotalMass;
+
+    private float TorqueOnHips => (massSystem.CalculateCoG(massSystem.subsystem).z - leftHipJoint.position.z) *
+                                  massSystem.subsystem.Sum(m => m.mass);
+    
     
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
@@ -89,9 +98,8 @@ public class SASLModelManager : MonoBehaviour
         handsToCoG = new Vector3(0, -1, handsToCoG.z);
 
         float armAngle = Vector3.SignedAngle(handsToCoG, Vector3.down, HandAxis);
-        Debug.Log(handsToCoG + " to " + Vector3.down + " = " + armAngle);
-        
-        
+
+
         if (applyArmAngle)
         {
             transform.RotateAround(leftHand.position, HandAxis, 2*armAngle);
@@ -100,7 +108,8 @@ public class SASLModelManager : MonoBehaviour
         }
 
 
-        
+        shoulderTorqueText.text = "Torque on shoulders:\n" + TorqueOnShoulders.RoundToNearest(.01f) + " KN*M";
+        hipsTorqueText.text = "Torque on hips:\n" + TorqueOnHips.RoundToNearest(.01f) + " KN*M";
         
         
     }
