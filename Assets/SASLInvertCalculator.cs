@@ -45,6 +45,11 @@ public class SASLInvertCalculator : MonoBehaviour
     public Vector2 CombinedCG => (LegsCG * legsMassKg + TorsoCG * torsoMassKg) / (torsoMassKg + legsMassKg);
 
 
+
+    public float CombinedMass => legsMassKg + torsoMassKg;
+
+    public float TorqueOnHips => (LegsCG.x - x1) * legsMassKg;
+    public float TorqueOnShoulders => CombinedCG.x * CombinedMass;
     
     
 
@@ -57,8 +62,8 @@ public class SASLInvertCalculator : MonoBehaviour
 
     private void Update()
     {
-        shoulderTorqueText.text = "Torque on shoulders:\n" + GetTorqueOnShoulder().RoundToNearest(.01f) + " KN*M";
-        hipsTorqueText.text = "Torque on hips:\n" + GetTorqueOnHips().RoundToNearest(.01f) + " KN*M";
+        shoulderTorqueText.text = "Torque on shoulders:\n" + TorqueOnShoulders.RoundToNearest(.01f) + " KN*M";
+        hipsTorqueText.text = "Torque on hips:\n" + TorqueOnHips.RoundToNearest(.01f) + " KN*M";
         
         shoulderToTorsoAngleDegrees = shoulderAngle.slider.value;
         torsoToLegsAngleDegrees = hipAngle.slider.value;
@@ -66,78 +71,4 @@ public class SASLInvertCalculator : MonoBehaviour
         variablesText.text = "x1: " + x1.RoundToNearest(.1f) + "\ny1: " + y1.RoundToNearest(.1f) + 
                              "\nx2: " + x2.RoundToNearest(.1f) + "\ny2: " + y2.RoundToNearest(.1f);
     }
-
-    private float GetTorqueOnShoulder()
-    {
-        return GetTorqueOnShoulderFromLegs() + GetTorqueOnShoulderFromTorso();
-    }
-
-    private float GetTorqueOnHips()
-    {
-        float hipsToToesX = GetDistanceHipsToToesInX();
-        return legsMassKg * legsCenterOfGravity * hipsToToesX;
-    }
-    
-    
-    
-    
-    
-    
-    
-    private float GetTorqueOnShoulderFromTorso()
-    {
-        float shouldersToHipsX = GetDistanceShouldersToHipsInX();
-        return torsoMassKg * torsoCenterOfGravity * shouldersToHipsX;
-    }
-
-    private float GetDistanceShouldersToHipsInX()
-    {
-        // x is the distance in the x-axis from the shoulders to hips
-        // l is distance from shoulders to hips (magnitude)
-        // Θ is the elevation angle of the shoulders
-        // Θ = 180 - shoulder angle
-        // x = l * sin(Θ)
-
-        float l = torsoLengthMeters;
-        float theta = 180 - shoulderToTorsoAngleDegrees;
-
-
-        float retVal = l * Mathf.Sin(theta * Mathf.Deg2Rad);
-        return retVal;
-    }
-
-    private float GetDistanceHipsToToesInX()
-    {
-        // Θ is the elevation angle of the shoulders
-        // Θ = 180 - shoulder angle
-        
-        // B = hips angle
-        // alpha = 180 - B - (90 - Θ)  
-        
-        // l is the distance from hips to toes (magnitude)
-        // x is the horizontal (x-axis) distance from the hips to the toes
-        // x = l * cos(a)
-
-        float theta = 180 - shoulderToTorsoAngleDegrees;
-        float B = torsoToLegsAngleDegrees;
-        float alpha = 180 - B - (90 - theta);
-
-        float l = legsLengthMeters;
-
-        return l * Mathf.Cos(alpha * Mathf.Deg2Rad);
-    }
-
-
-
-    private float GetTorqueOnShoulderFromLegs()
-    {
-        float hipsToToesX = GetDistanceHipsToToesInX();
-        return legsMassKg * legsCenterOfGravity * hipsToToesX;
-    }
-
-    private float GetArmsAngleFromVertical()
-    {
-        return 0;
-    }
-
 }

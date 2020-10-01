@@ -91,8 +91,7 @@ public class SASL3DVisualizer : MonoBehaviour
     private void PlaceCoGMarkers()
     {
         Vector3 zeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position)/2 + .05f * transform.forward;//(leftShoulderJoint.position + rightShoulderJoint.position) / 2;
-        Debug.Log(zeroPoint);
-        
+
         torsoCoGMarker.Place(zeroPoint,startForward,startUp, data.TorsoCG);
         legsCoGMarker.Place(zeroPoint,startForward,startUp, data.LegsCG);
         legsAndTorsoCoGMarker.Place(zeroPoint,startForward,startUp, data.CombinedCG);
