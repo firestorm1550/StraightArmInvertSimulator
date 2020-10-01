@@ -34,7 +34,11 @@ public class SASL3DVisualizer : MonoBehaviour
     private Vector3 HipAxis => (rightHipJoint.position - leftHipJoint.position).normalized;
 
 
-    private CoGMarker testMarker;
+    private CoGMarker handsMarker;
+    private CoGMarker shouldersMarker;
+    private CoGMarker hipsMarker;
+    private CoGMarker toesMarker;
+    
     private CoGMarker armsCoGMarker;
     private CoGMarker headCoGMarker;
     private CoGMarker torsoCoGMarker;
@@ -96,8 +100,11 @@ public class SASL3DVisualizer : MonoBehaviour
     {
         Vector2 CoGZeroPoint = (leftShoulderJoint.position + rightShoulderJoint.position) / 2;// + .05f * transform.forward;
         
-        testMarker.Place(CoGZeroPoint,startForward,startUp, data.HandsPosition);
-        
+        // handsMarker.Place(CoGZeroPoint,startForward,startUp, data.HandsPosition);
+        // shouldersMarker.Place(CoGZeroPoint,startForward,startUp, Vector2.zero);
+        // hipsMarker.Place(CoGZeroPoint,startForward,startUp, new Vector2(data.x1,-data.y1));
+        // toesMarker.Place(CoGZeroPoint,startForward,startUp, new Vector2(data.x1 + data.x2,data.y2 - data.y1));
+
         armsCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.ArmsCG);
         headCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.HeadCG);
         torsoCoGMarker.Place(CoGZeroPoint,startForward,startUp, data.TorsoCG);
@@ -111,8 +118,19 @@ public class SASL3DVisualizer : MonoBehaviour
 
     private void PrepCoGMarkers()
     {
-        testMarker = Instantiate(CoGMarkerPrefab);
-        testMarker.Initialize("Test Marker", Color.black, data.ArmsMassKg);
+        handsMarker = Instantiate(CoGMarkerPrefab);
+        handsMarker.Initialize("Hands Marker", Color.black, data.ArmsMassKg);
+
+        shouldersMarker = Instantiate(CoGMarkerPrefab);
+        shouldersMarker.Initialize("Shoulder Marker", Color.black, data.ArmsMassKg);
+
+        hipsMarker = Instantiate(CoGMarkerPrefab);
+        hipsMarker.Initialize("Hips Marker", Color.black, data.ArmsMassKg);
+
+        toesMarker = Instantiate(CoGMarkerPrefab);
+        toesMarker.Initialize("Toes Marker", Color.black, data.ArmsMassKg);
+        
+        
         
         armsCoGMarker = Instantiate(CoGMarkerPrefab);
         armsCoGMarker.Initialize("Arms CoG", Color.red, data.ArmsMassKg);

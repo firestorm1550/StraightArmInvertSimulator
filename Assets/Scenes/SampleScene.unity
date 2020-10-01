@@ -1385,7 +1385,7 @@ MonoBehaviour:
   headLengthMeters: 0.4
   headCenterOfGravity: 0.55
   armsMassPercent: 11.4
-  armsLengthMeters: 0.66
+  armsLengthMeters: 0.5
   armsCenterOfGravity: 0.4
   torsoMassPercent: 46.84
   torsoLengthMeters: 0.46
