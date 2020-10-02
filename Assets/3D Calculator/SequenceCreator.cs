@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DAS_Unity_Framework;
 using UnityEngine;
 
 namespace _3D_Calculator
@@ -19,7 +20,8 @@ namespace _3D_Calculator
                 new SequenceElement(3f, -75, 70, 1),
                 new SequenceElement(1.5f, -45, 180, 2),
                 new SequenceElement(1, 3.5f, 180, 1),
-                new SequenceElement(3, 55, 180, 2)
+                new SequenceElement(3, 55, 180, 2),
+                new SequenceElement(1, 180, 180, 1),
 
             }));
         }
@@ -56,8 +58,8 @@ namespace _3D_Calculator
 
         private void InterpToPose(SequenceElement start, SequenceElement end, float t)
         {
-            model.shoulderAngle.slider.value = Interpolation.Interpolate(start.shoulderAngle, end.shoulderAngle, t, InterpolationType.Sqrt);
-            model.hipAngle.slider.value = Interpolation.Interpolate(start.hipsAngle, end.hipsAngle, t, InterpolationType.Sqrt);
+            model.shoulderAngle.slider.value = Interpolation.Interpolate(start.shoulderAngle, end.shoulderAngle, t, InterpolationType.EaseInOutSine);
+            model.hipAngle.slider.value = Interpolation.Interpolate(start.hipsAngle, end.hipsAngle, t, InterpolationType.EaseInOutSine);
         }
     }
 

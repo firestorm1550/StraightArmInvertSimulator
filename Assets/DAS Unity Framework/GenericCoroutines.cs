@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using DAS_Unity_Framework;
 using UnityEngine;
 
 public static class GenericCoroutines
