@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
+[ExecuteAlways]
 [RequireComponent(typeof(GridLayoutGroup))]
 public class GLGCellResizer : MonoBehaviour
 {
