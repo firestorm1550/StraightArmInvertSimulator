@@ -18,20 +18,21 @@ namespace _3D_Calculator
         {
             
             model = GetComponent<SASLModelManager>();
-            StartCoroutine(ExecuteSequence(new List<SequenceElement>
-            { 
-                new SequenceElement{transitionTime = 0   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
-                new SequenceElement{transitionTime = 1   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration = .25f},
-                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   10, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration = .75f, name = "Straight Arm Straight Leg Invert"},
-                new SequenceElement{transitionTime = 3f  , shoulderFlexionAngle =  -75, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration =    1, name = "Skin the Cat"},
-                new SequenceElement{transitionTime = 1.5f, shoulderFlexionAngle =  -45, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle = 60, holdDuration =    2, name = "Back Planche"},
-                new SequenceElement{transitionTime = 1.5f, shoulderFlexionAngle =  -45, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    2, name = "Harder Back Planche"},
-                new SequenceElement{transitionTime = 1   , shoulderFlexionAngle = 3.5f, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
-                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   55, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle = 60, holdDuration =    2, name = "Front Planche"},
-                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   55, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    2, name = "Harder Front Planche"},
-                new SequenceElement{transitionTime = 2   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
+            
+            List<SequenceElement> sequence = new List<SequenceElement>();
+            
+            sequence.Add(SequenceElements.DeadHang(0,.5f));
+            sequence.AddRange(SequenceElements.SASLInvert());
+            sequence.Add(SequenceElements.SkinTheCat());
+            sequence.Add(SequenceElements.BackPlanche(60));
+            sequence.Add(SequenceElements.BackPlanche(0));
+            sequence.Add(SequenceElements.Inverted());
+            sequence.Add(SequenceElements.FrontPlanche(60));
+            sequence.Add(SequenceElements.FrontPlanche(0));
+            sequence.Add(SequenceElements.DeadHang(2, 1));
 
-            }));
+
+            StartCoroutine(ExecuteSequence(sequence));
         }
 
         private IEnumerator ExecuteSequence(List<SequenceElement> sequenceElements)
