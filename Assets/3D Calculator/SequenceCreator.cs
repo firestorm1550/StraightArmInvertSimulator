@@ -24,10 +24,10 @@ namespace _3D_Calculator
             sequence.Add(SequenceElements.DeadHang(0,.5f));
             sequence.AddRange(SequenceElements.SASLInvert());
             sequence.Add(SequenceElements.SkinTheCat());
-            sequence.Add(SequenceElements.BackPlanche(60));
+            sequence.Add(SequenceElements.BackPlanche(30));
             sequence.Add(SequenceElements.BackPlanche(0));
             sequence.Add(SequenceElements.Inverted());
-            sequence.Add(SequenceElements.FrontPlanche(60));
+            sequence.Add(SequenceElements.FrontPlanche(30));
             sequence.Add(SequenceElements.FrontPlanche(0));
             sequence.Add(SequenceElements.DeadHang(2, 1));
 
