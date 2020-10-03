@@ -19,15 +19,17 @@ namespace _3D_Calculator
             
             model = GetComponent<SASLModelManager>();
             StartCoroutine(ExecuteSequence(new List<SequenceElement>
-            {
-                new SequenceElement(0, 180, 180, 1),
-                new SequenceElement(1, 180, 70, .25f),
-                new SequenceElement(3, 10, 70, .75f,"Straight Arm Straight Leg Invert"),
-                new SequenceElement(3f, -75, 70, 1, "Skin the Cat"),
-                new SequenceElement(1.5f, -45, 180, 2, "Back Planche"),
-                new SequenceElement(1, 3.5f, 180, 1),
-                new SequenceElement(3, 55, 180, 2, "Front Planche"),
-                new SequenceElement(2, 180, 180, 1),
+            { 
+                new SequenceElement{transitionTime = 0   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
+                new SequenceElement{transitionTime = 1   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration = .25f},
+                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   10, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration = .75f, name = "Straight Arm Straight Leg Invert"},
+                new SequenceElement{transitionTime = 3f  , shoulderFlexionAngle =  -75, anteriorHipFlexionAngle =  70, lateralHipFlexionAngle =  0, holdDuration =    1, name = "Skin the Cat"},
+                new SequenceElement{transitionTime = 1.5f, shoulderFlexionAngle =  -45, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle = 60, holdDuration =    2, name = "Back Planche"},
+                new SequenceElement{transitionTime = 1.5f, shoulderFlexionAngle =  -45, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    2, name = "Harder Back Planche"},
+                new SequenceElement{transitionTime = 1   , shoulderFlexionAngle = 3.5f, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
+                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   55, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle = 60, holdDuration =    2, name = "Front Planche"},
+                new SequenceElement{transitionTime = 3   , shoulderFlexionAngle =   55, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    2, name = "Harder Front Planche"},
+                new SequenceElement{transitionTime = 2   , shoulderFlexionAngle =  180, anteriorHipFlexionAngle = 180, lateralHipFlexionAngle =  0, holdDuration =    1},
 
             }));
         }
@@ -41,8 +43,10 @@ namespace _3D_Calculator
                     moveLabel.text = sequenceElement.name;
                 //create a dummy sequence element to lerp from
                 SequenceElement start =
-                    new SequenceElement(0, model.shoulderFlexionSlider.slider.value,
-                        model.anteriorHipFlexionSlider.slider.value, 0);
+                    new SequenceElement{shoulderFlexionAngle = model.shoulderFlexionSlider.slider.value,
+                                        anteriorHipFlexionAngle = model.anteriorHipFlexionSlider.slider.value,
+                                        lateralHipFlexionAngle = model.lateralHipFlexionSlider.slider.value
+                    };
                 float transitionTimeElapsed = 0;
                 float holdDurationElapsed = 0;
                 
@@ -54,8 +58,9 @@ namespace _3D_Calculator
                     yield return null;
                 }
 
-                model.shoulderFlexionSlider.slider.value = sequenceElement.shoulderAngle;
-                model.anteriorHipFlexionSlider.slider.value = sequenceElement.hipsAngle;
+                model.shoulderFlexionSlider.slider.value = sequenceElement.shoulderFlexionAngle;
+                model.anteriorHipFlexionSlider.slider.value = sequenceElement.anteriorHipFlexionAngle;
+                model.lateralHipFlexionSlider.slider.value = sequenceElement.lateralHipFlexionAngle;
 
                 while (holdDurationElapsed < sequenceElement.holdDuration)
                 {
@@ -69,8 +74,9 @@ namespace _3D_Calculator
 
         private void InterpToPose(SequenceElement start, SequenceElement end, float t)
         {
-            model.shoulderFlexionSlider.slider.value = Interpolation.Interpolate(start.shoulderAngle, end.shoulderAngle, t, InterpolationType.EaseInOutSine);
-            model.anteriorHipFlexionSlider.slider.value = Interpolation.Interpolate(start.hipsAngle, end.hipsAngle, t, InterpolationType.EaseInOutSine);
+            model.shoulderFlexionSlider.slider.value = Interpolation.Interpolate(start.shoulderFlexionAngle, end.shoulderFlexionAngle, t, InterpolationType.EaseInOutSine);
+            model.anteriorHipFlexionSlider.slider.value = Interpolation.Interpolate(start.anteriorHipFlexionAngle, end.anteriorHipFlexionAngle, t, InterpolationType.EaseInOutSine);
+            model.lateralHipFlexionSlider.slider.value = Interpolation.Interpolate(start.lateralHipFlexionAngle, end.lateralHipFlexionAngle, t, InterpolationType.EaseInOutSine);
             if (moveLabel)
             {
                 Color c = moveLabel.color;
@@ -82,18 +88,10 @@ namespace _3D_Calculator
     public class SequenceElement
     {
         public float transitionTime;//time to reach this pose
-        public float shoulderAngle;
-        public float hipsAngle;
+        public float shoulderFlexionAngle;
+        public float anteriorHipFlexionAngle;
+        public float lateralHipFlexionAngle;
         public float holdDuration;
         public string name;
-
-        public SequenceElement(float transitionTime, float shoulderAngle, float hipsAngle, float holdDuration, string name = "")
-        {
-            this.transitionTime = transitionTime;
-            this.shoulderAngle = shoulderAngle;
-            this.hipsAngle = hipsAngle;
-            this.holdDuration = holdDuration;
-            this.name = name;
-        }
     }
 }
