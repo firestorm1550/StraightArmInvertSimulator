@@ -10,11 +10,13 @@ namespace _3D_Calculator
     [RequireComponent(typeof(SASLModelManager))]
     public class SequenceCreator : MonoBehaviour
     {
+        public bool SequenceInProgress { get; private set; }
         public TextMeshProUGUI moveLabel;
-        
         private SASLModelManager model;
-        private void Start()
+
+        public void StartSequence()
         {
+            
             model = GetComponent<SASLModelManager>();
             StartCoroutine(ExecuteSequence(new List<SequenceElement>
             {
@@ -32,15 +34,15 @@ namespace _3D_Calculator
 
         private IEnumerator ExecuteSequence(List<SequenceElement> sequenceElements)
         {
-            
+            SequenceInProgress = true;
             foreach (SequenceElement sequenceElement in sequenceElements)
             {
                 if (moveLabel)
                     moveLabel.text = sequenceElement.name;
                 //create a dummy sequence element to lerp from
                 SequenceElement start =
-                    new SequenceElement(0, model.shoulderAngle.slider.value,
-                        model.hipAngle.slider.value, 0);
+                    new SequenceElement(0, model.shoulderFlexionSlider.slider.value,
+                        model.anteriorHipFlexionSlider.slider.value, 0);
                 float transitionTimeElapsed = 0;
                 float holdDurationElapsed = 0;
                 
@@ -52,8 +54,8 @@ namespace _3D_Calculator
                     yield return null;
                 }
 
-                model.shoulderAngle.slider.value = sequenceElement.shoulderAngle;
-                model.hipAngle.slider.value = sequenceElement.hipsAngle;
+                model.shoulderFlexionSlider.slider.value = sequenceElement.shoulderAngle;
+                model.anteriorHipFlexionSlider.slider.value = sequenceElement.hipsAngle;
 
                 while (holdDurationElapsed < sequenceElement.holdDuration)
                 {
@@ -61,12 +63,14 @@ namespace _3D_Calculator
                     yield return null;
                 }
             }
+
+            SequenceInProgress = false;
         }
 
         private void InterpToPose(SequenceElement start, SequenceElement end, float t)
         {
-            model.shoulderAngle.slider.value = Interpolation.Interpolate(start.shoulderAngle, end.shoulderAngle, t, InterpolationType.EaseInOutSine);
-            model.hipAngle.slider.value = Interpolation.Interpolate(start.hipsAngle, end.hipsAngle, t, InterpolationType.EaseInOutSine);
+            model.shoulderFlexionSlider.slider.value = Interpolation.Interpolate(start.shoulderAngle, end.shoulderAngle, t, InterpolationType.EaseInOutSine);
+            model.anteriorHipFlexionSlider.slider.value = Interpolation.Interpolate(start.hipsAngle, end.hipsAngle, t, InterpolationType.EaseInOutSine);
             if (moveLabel)
             {
                 Color c = moveLabel.color;
