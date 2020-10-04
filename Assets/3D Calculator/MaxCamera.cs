@@ -253,7 +253,7 @@ public class MaxCamera : MonoBehaviour
         
         foreach (GameObject o in objects)
         {
-            foreach (MeshRenderer rend in o.GetComponentsInChildren<MeshRenderer>())
+            foreach (Renderer rend in o.GetComponentsInChildren<Renderer>())
             {
                 bounds.Encapsulate(rend.bounds);
             }    
