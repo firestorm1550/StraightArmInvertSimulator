@@ -57,7 +57,12 @@ public static class VectorExtensionMethods
     //Multiplies x by x, y by y, and z by z, returning the resultant value
     public static Vector3 Multiply(this Vector3 v1, Vector3 v2)
     {
-        Vector3 retval = new Vector3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+        return v1.Multiply(v2.x, v2.y, v2.z);
+    }
+    
+    public static Vector3 Multiply(this Vector3 v1, float x, float y, float z)
+    {
+        Vector3 retval = new Vector3(v1.x * x, v1.y * y, v1.z * z);
         return retval;
     }
 

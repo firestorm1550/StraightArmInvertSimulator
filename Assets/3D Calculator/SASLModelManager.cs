@@ -42,15 +42,24 @@ public class SASLModelManager : MonoBehaviour
     
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
-    
-    
-    
-    private void Awake()
+
+
+
+    public void InitializeFields(Text shoulderTorque, Text hipsTorque, LabelledSlider shoulderFlexion,
+        LabelledSlider anteriorHipFlexion, LabelledSlider lateralHipFlexion)
     {
+        shoulderTorqueText = shoulderTorque;
+        hipsTorqueText = hipsTorque;
+
+        shoulderFlexionSlider = shoulderFlexion;
+        anteriorHipFlexionSlider = anteriorHipFlexion;
+        lateralHipFlexionSlider = lateralHipFlexion;
+        
         shoulderFlexionSlider.Init(-90,180,180);
         anteriorHipFlexionSlider.Init(20, 180, 180);
         lateralHipFlexionSlider.Init(0, 90, 0);
     }
+    
 
     private void Start()
     {
