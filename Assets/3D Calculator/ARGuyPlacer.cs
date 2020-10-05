@@ -36,10 +36,10 @@ public class ARGuyPlacer : MonoBehaviour
                 Vector3 position = _hits[0].pose.position;
                 ARGuyInstance.transform.position = position;
                 ARGuyInstance.transform.forward = (camera.transform.position - position).Multiply(1, 0, 1);
-                
-                //hide points and planes
-                planeManager.enabled = false;
-                pointCloudManager.enabled = false;
+                //
+                // //hide points and planes
+                // planeManager.enabled = false;
+                // pointCloudManager.enabled = false;
             }
     }
     
@@ -72,8 +72,8 @@ public class ARGuyPlacer : MonoBehaviour
         ARGuyInstance = null;
         
         //show points and planes
-        planeManager.enabled = true;
-        pointCloudManager.enabled = true;
+        // planeManager.enabled = true;
+        // pointCloudManager.enabled = true;
     }
     
 }
