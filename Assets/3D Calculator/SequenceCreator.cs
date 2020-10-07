@@ -11,7 +11,6 @@ namespace _3D_Calculator
     public class SequenceCreator : MonoBehaviour
     {
         public bool SequenceInProgress { get; private set; }
-        public TextMeshProUGUI moveLabel;
         private SASLModelManager model;
 
         public void StartSequence()
@@ -40,13 +39,13 @@ namespace _3D_Calculator
             SequenceInProgress = true;
             foreach (SequenceElement sequenceElement in sequenceElements)
             {
-                if (moveLabel)
-                    moveLabel.text = sequenceElement.name;
+                if (model.gc.sequenceMoveLabel)
+                    model.gc.sequenceMoveLabel.text = sequenceElement.name;
                 //create a dummy sequence element to lerp from
                 SequenceElement start =
-                    new SequenceElement{shoulderFlexionAngle = model.shoulderFlexionSlider.slider.value,
-                                        anteriorHipFlexionAngle = model.anteriorHipFlexionSlider.slider.value,
-                                        lateralHipFlexionAngle = model.lateralHipFlexionSlider.slider.value
+                    new SequenceElement{shoulderFlexionAngle = model.gc.shoulderFlexionSlider.slider.value,
+                                        anteriorHipFlexionAngle = model.gc.anteriorHipFlexionSlider.slider.value,
+                                        lateralHipFlexionAngle = model.gc.lateralHipFlexionSlider.slider.value
                     };
                 float transitionTimeElapsed = 0;
                 float holdDurationElapsed = 0;
@@ -59,9 +58,9 @@ namespace _3D_Calculator
                     yield return null;
                 }
 
-                model.shoulderFlexionSlider.slider.value = sequenceElement.shoulderFlexionAngle;
-                model.anteriorHipFlexionSlider.slider.value = sequenceElement.anteriorHipFlexionAngle;
-                model.lateralHipFlexionSlider.slider.value = sequenceElement.lateralHipFlexionAngle;
+                model.gc.shoulderFlexionSlider.slider.value = sequenceElement.shoulderFlexionAngle;
+                model.gc.anteriorHipFlexionSlider.slider.value = sequenceElement.anteriorHipFlexionAngle;
+                model.gc.lateralHipFlexionSlider.slider.value = sequenceElement.lateralHipFlexionAngle;
 
                 while (holdDurationElapsed < sequenceElement.holdDuration)
                 {
@@ -75,13 +74,14 @@ namespace _3D_Calculator
 
         private void InterpToPose(SequenceElement start, SequenceElement end, float t)
         {
-            model.shoulderFlexionSlider.slider.value = Interpolation.Interpolate(start.shoulderFlexionAngle, end.shoulderFlexionAngle, t, InterpolationType.EaseInOutSine);
-            model.anteriorHipFlexionSlider.slider.value = Interpolation.Interpolate(start.anteriorHipFlexionAngle, end.anteriorHipFlexionAngle, t, InterpolationType.EaseInOutSine);
-            model.lateralHipFlexionSlider.slider.value = Interpolation.Interpolate(start.lateralHipFlexionAngle, end.lateralHipFlexionAngle, t, InterpolationType.EaseInOutSine);
-            if (moveLabel)
+            model.gc.shoulderFlexionSlider.slider.value = Interpolation.Interpolate(start.shoulderFlexionAngle, end.shoulderFlexionAngle, t, InterpolationType.EaseInOutSine);
+            model.gc.anteriorHipFlexionSlider.slider.value = Interpolation.Interpolate(start.anteriorHipFlexionAngle, end.anteriorHipFlexionAngle, t, InterpolationType.EaseInOutSine);
+            model.gc.lateralHipFlexionSlider.slider.value = Interpolation.Interpolate(start.lateralHipFlexionAngle, end.lateralHipFlexionAngle, t, InterpolationType.EaseInOutSine);
+            if (model.gc.sequenceMoveLabel)
             {
-                Color c = moveLabel.color;
-                moveLabel.color = new Color(c.r,c.g,c.b, Interpolation.Interpolate(0, 1, t, InterpolationType.EaseInOutSine));
+                Color c = model.gc.sequenceMoveLabel.color;
+                model.gc.sequenceMoveLabel.color = new Color(c.r,c.g,c.b, 
+                    Interpolation.Interpolate(0, 1, t, InterpolationType.EaseInOutSine));
             }
         }
     }

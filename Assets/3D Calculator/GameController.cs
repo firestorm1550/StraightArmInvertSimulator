@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace _3D_Calculator
@@ -29,16 +30,29 @@ namespace _3D_Calculator
 
         private void Awake()
         {
-            SetActiveSASLUI(false);
-            // cameraController.Init(modelManager.gameObject);
-            // cameraController.Focus(modelManager.gameObject);
-            // cameraController.desiredDegreeOffsetY = -14;
-        }
+            modelManager = FindObjectOfType<SASLModelManager>();
+            if (modelManager)
+                modelManager.gc = this;
+            else
+                SetActiveSASLUI(false);
+            
+            shoulderFlexionSlider.Init(-90, 180, 180);
+            anteriorHipFlexionSlider.Init(20, 180, 180);
+            lateralHipFlexionSlider.Init(0, 90, 0);
+            }
         
         private void Update()
         {
-            startSequenceButton.interactable = sequenceCreator?.SequenceInProgress == false;
-            sequenceCreator?.moveLabel.gameObject.SetActive(sequenceCreator.SequenceInProgress);
+            if (sequenceCreator)
+            {
+                startSequenceButton.interactable = sequenceCreator.SequenceInProgress == false;
+                sequenceMoveLabel.gameObject.SetActive(sequenceCreator.SequenceInProgress);
+            }
+            else
+            {
+                startSequenceButton.gameObject.SetActive(false);
+                sequenceMoveLabel.gameObject.SetActive(false);
+            }
         }
 
         public void OnInputSliderChanged()
@@ -49,15 +63,10 @@ namespace _3D_Calculator
         public GameObject SpawnGuy()
         {
              modelManager = Instantiate(modelManagerPrefab);
-             modelManager.InitializeFields(shoulderTorqueText, hipsTorqueText, 
-                 shoulderFlexionSlider, anteriorHipFlexionSlider, lateralHipFlexionSlider);
+             modelManager.gc = this;
+             sequenceCreator = modelManager.GetComponentInChildren<SequenceCreator>();
              
-             sequenceCreator = modelManager.GetComponent<SequenceCreator>();
-             if(sequenceCreator) sequenceCreator.moveLabel = sequenceMoveLabel;
-
              SetActiveSASLUI(true);
-             
-             
              return modelManager.gameObject;
         }
 
@@ -78,7 +87,8 @@ namespace _3D_Calculator
             lateralHipFlexionSlider.gameObject.SetActive(value);
 
             startSequenceButton.gameObject.SetActive(value);
-            despawnGuyButton.gameObject.SetActive(value);
+            if(SceneManager.GetActiveScene().name != "Calculator3D_Standalone")
+                despawnGuyButton.gameObject.SetActive(value);
         }
         
         public void OnClick_StartSequence()

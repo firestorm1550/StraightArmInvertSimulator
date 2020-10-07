@@ -1,13 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using _3D_Calculator;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 public class ARGuyPlacer : MonoBehaviour
 {
     public Camera camera;
+    public ARSession session;
     public ARRaycastManager raycastManager;
     public ARPlaneManager planeManager;
     public ARPointCloudManager pointCloudManager;
@@ -17,11 +20,33 @@ public class ARGuyPlacer : MonoBehaviour
     private float _lastHitTime;
     private List<ARRaycastHit> _hits = new List<ARRaycastHit>();
     private GameObject ARGuyInstance;
-    
-    
+
+
+    IEnumerator Start()
+    {
+        if ((ARSession.state == ARSessionState.None) ||
+            (ARSession.state == ARSessionState.CheckingAvailability))
+        {
+            yield return ARSession.CheckAvailability();
+        }
+
+        if (ARSession.state == ARSessionState.Unsupported)
+        {
+            // Start some fallback experience for unsupported devices
+            SceneManager.LoadScene("Calculator3D_Standalone");
+        }
+        else
+        {
+            // Start the AR session
+            session.enabled = true;
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
+        if (session.enabled == false)
+            return;
         if (ARGuyInstance != null)
             return;
         if (!TryGetTouchPosition(out Vector2 touchPosition))
@@ -36,14 +61,13 @@ public class ARGuyPlacer : MonoBehaviour
                 Vector3 position = _hits[0].pose.position;
                 ARGuyInstance.transform.position = position;
                 ARGuyInstance.transform.forward = (camera.transform.position - position).Multiply(1, 0, 1);
-                //
+                
                 // //hide points and planes
                 // planeManager.enabled = false;
                 // pointCloudManager.enabled = false;
             }
     }
-    
-    
+
     bool TryGetTouchPosition(out Vector2 touchPosition)
     {
 #if UNITY_EDITOR

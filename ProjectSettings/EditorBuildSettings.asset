@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/3D Calculator/Calculator3D_Mobile.unity
+    path: Assets/3D Calculator/ARStuff/Calculator3D_Mobile.unity
     guid: 9fcc266d62fd24a6693d848a855a604d
   - enabled: 1
     path: Assets/3D Calculator/Calculator3D_Standalone.unity

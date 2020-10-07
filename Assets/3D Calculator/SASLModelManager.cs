@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using _3D_Calculator;
 using DAS_Unity_Framework.ExtensionMethods;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -9,13 +10,9 @@ using UnityEngine.UI;
 public class SASLModelManager : MonoBehaviour
 {
     public bool applyArmAngle = true;
-    
-    public Text shoulderTorqueText;
-    public Text hipsTorqueText;
-    public LabelledSlider shoulderFlexionSlider;
-    public LabelledSlider anteriorHipFlexionSlider;
-    public LabelledSlider lateralHipFlexionSlider;
 
+    public GameController gc;
+    
     public MassSystem massSystem;
     
     public Transform rightShoulderJoint;
@@ -43,24 +40,7 @@ public class SASLModelManager : MonoBehaviour
     private Vector3 _leftHandStartPos;
     private Dictionary<Transform, Quaternion> startRotations;
 
-
-
-    public void InitializeFields(Text shoulderTorque, Text hipsTorque, LabelledSlider shoulderFlexion,
-        LabelledSlider anteriorHipFlexion, LabelledSlider lateralHipFlexion)
-    {
-        shoulderTorqueText = shoulderTorque;
-        hipsTorqueText = hipsTorque;
-
-        shoulderFlexionSlider = shoulderFlexion;
-        anteriorHipFlexionSlider = anteriorHipFlexion;
-        lateralHipFlexionSlider = lateralHipFlexion;
-        
-        shoulderFlexionSlider.Init(-90,180,180);
-        anteriorHipFlexionSlider.Init(20, 180, 180);
-        lateralHipFlexionSlider.Init(0, 90, 0);
-    }
     
-
     private void Start()
     {
         _leftHandStartPos = leftHand.transform.position;
@@ -81,21 +61,21 @@ public class SASLModelManager : MonoBehaviour
             joint.localRotation = startRotations[joint];
         }
 
-        float A = 180 - shoulderFlexionSlider.slider.value;
+        float A = 180 - gc.shoulderFlexionSlider.slider.value;
         rightShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, A);
         leftShoulderJoint.RotateAround(rightShoulderJoint.position, ShoulderAxis, A);
 
-        float alpha = anteriorHipFlexionSlider.slider.value - 180;
+        float alpha = gc.anteriorHipFlexionSlider.slider.value - 180;
         rightUpLegJoint.RotateAround(rightUpLegJoint.position, AnteriorHipAxis, alpha);
         leftUpLegJoint.RotateAround(leftUpLegJoint.position, AnteriorHipAxis, alpha);
 
-        float lateralHipAngle = lateralHipFlexionSlider.slider.value;
+        float lateralHipAngle = gc.lateralHipFlexionSlider.slider.value;
         rightUpLegJoint.Rotate(Vector3.up, -lateralHipAngle, Space.Self);
         leftUpLegJoint.Rotate(Vector3.up, lateralHipAngle, Space.Self);
         
 
         //lock hands position
-        transform.RotateAround(transform.position, HandAxis, shoulderFlexionSlider.slider.value - 180);
+        transform.RotateAround(transform.position, HandAxis, gc.shoulderFlexionSlider.slider.value - 180);
         transform.position = _leftHandStartPos + (transform.position - leftHand.position);
         
         
@@ -114,8 +94,8 @@ public class SASLModelManager : MonoBehaviour
         }
 
 
-        shoulderTorqueText.text = "Torque on shoulders:\n" + TorqueOnShoulders.RoundToNearest(.01f) + " KN*M";
-        hipsTorqueText.text = "Torque on hips:\n" + TorqueOnHips.RoundToNearest(.01f) + " KN*M";
+        gc.shoulderTorqueText.text = "Torque on shoulders:\n" + TorqueOnShoulders.RoundToNearest(.01f) + " KN*M";
+        gc.hipsTorqueText.text = "Torque on hips:\n" + TorqueOnHips.RoundToNearest(.01f) + " KN*M";
         
         
     }
