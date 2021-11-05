@@ -96,6 +96,10 @@ namespace _3D_Calculator
             if(sequenceCreator)
                 sequenceCreator.StartSequence();
         }
-        
+
+        public void OnClickExit()
+        {
+            Application.Quit();
+        }
     }
 }
